@@ -28,3 +28,11 @@ jobs:
           kay: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+
+  deploy:
+        docker:
+            - image: circleci/node:10.16.3
+        steps:
+            - run:
+                name: deploy-application
+                command: ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "export SERVER=\"$SERVER\"; export PRIVATE_KEY=\"$PRIVATE_KEY\"; rm -rf DevOpsCA/; git clone https://github.com/HyperPixel-212/DevOpsSec; source DevOpsSec/deploy.sh"
