@@ -28,3 +28,10 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+  deploy:
+    docker:
+    - image: circleci/node10.16.3
+    steps:
+      - run:
+          name: deploy-application
+          command: ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "export SERVER=\"$SERVER\"; export DevOpsKey=\"$DevOpsKey\"; rm -rf SimpleApplication/; git clone https://github.com/HyperPixel-212/DevOpsSec.git; source SimpleApplication/deploy.sh"
